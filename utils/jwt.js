@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const jwt = require('jsonwebtoken');
+const { authExpireTime } = require('../utils/config');
 
 class Jwt {
   constructor (data) {
@@ -17,7 +18,7 @@ class Jwt {
     const cert = fs.readFileSync(path.join(__dirname, '../pem/private_key.pem'));// 私钥 可以自己生成
     const token = jwt.sign({
       data,
-      exp: created + 60 * 30, // 过期时间
+      exp: created + authExpireTime, // 过期时间
       iat: created, // 创建时间
     }, cert, { algorithm: 'RS256' });
     return token;
@@ -33,7 +34,7 @@ class Jwt {
     const cert = fs.readFileSync(path.join(__dirname, '../pem/private_key.pem'));// 私钥 可以自己生成
     const token = jwt.sign({
       data,
-      exp: created + 60 * 2, // 过期时间 30 分钟
+      exp: created + 60 * 30, // 过期时间 30 分钟
       iat: created, // 创建时间
     }, cert, { algorithm: 'RS256' });
     return token;

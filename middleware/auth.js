@@ -1,6 +1,7 @@
 const jwt = require('../utils/jwt');
 const mcache = require('memory-cache');
 const crypto = require('crypto');
+const userDao = require('../dao/userDao');
 
 const authToken = async (ctx, next) => {
   if (ctx.url.includes('/authapi')) {
@@ -9,8 +10,17 @@ const authToken = async (ctx, next) => {
       console.log('valid', valid);
       if (valid !== ctx.cookies.get('userId')) {
         ctx.rest.error({ msg: '登录态与当前用户不一致' });
+      } else if (valid === 'err') {
+        ctx.rest.error({ msg: '登录态已过期' });
       } else {
-        await next();
+        const token = await userDao.queryByUserIdToken(ctx.cookies.get('userId'));
+        console.log(token.auth);
+        console.log(ctx.session.token);
+        if (token.auth !== ctx.session.token) {
+          ctx.rest.error({ msg: '当前账号已在别处登录' });
+        } else {
+          await next();
+        }
       }
     } else {
       ctx.rest.error({ msg: '未登录' });

@@ -10,14 +10,14 @@ module.exports = {
     pathPrefix = pathPrefix || '/api/';
     return async (ctx, next) => {
       // 是否是REST API前缀?
-      if (ctx.request.path.startsWith(pathPrefix)) {
+      if (ctx.request.path.startsWith(pathPrefix) || ctx.request.path.startsWith('/authapi/')) {
         // 绑定rest()方法:
         ctx.rest = {
           success: (data) => {
             ctx.response.type = 'application/json';
             ctx.response.body = {
               code: codeStatus.success,
-              msg: codeMsg.success,
+              stat: codeMsg.success,
               ...data,
             };
           },
@@ -25,7 +25,7 @@ module.exports = {
             ctx.response.type = 'application/json';
             ctx.response.body = {
               code: codeStatus.error,
-              msg: codeMsg.error,
+              stat: codeMsg.error,
               ...data,
             };
           },
@@ -33,7 +33,7 @@ module.exports = {
             ctx.response.type = 'application/json';
             ctx.response.body = {
               code: codeStatus.paramsError,
-              msg: codeMsg.paramsError,
+              stat: codeMsg.paramsError,
               ...data,
             };
           },

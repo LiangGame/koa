@@ -86,7 +86,11 @@ function defineModel (name, attributes) {
           obj.createdAt = now;
           obj.updatedAt = now;
           obj.version = 0;
-        } else {
+        }
+      },
+      beforeUpdate: (obj) => {
+        const now = Date.now();
+        if (!obj.isNewRecord) {
           console.log('will update entity...');
           obj.updatedAt = now;
           obj.version++;

@@ -3,21 +3,24 @@ const fs = require('fs');
 const path = require('path');
 
 function addMapping (router, mapping) {
-  router.prefix('/api');
   for (const i in mapping) {
-    const { method, path: _path, fun } = mapping[i];
+    const { method, path: _path, fun, auth = false } = mapping[i];
+    let prefix = '/api';
+    if (auth) {
+      prefix = '/authapi';
+    }
 
     switch (method) {
       case 'GET':
-        router.get(_path, fun);
-        console.log(`register URL mapping: GET /api${_path}`);
+        router.get(`${prefix}${_path}`, fun);
+        console.log(`register URL mapping: GET ${prefix}${_path}`);
         break;
       case 'POST':
-        router.post(_path, fun);
-        console.log(`register URL mapping: POST /api${_path}`);
+        router.post(`${prefix}${_path}`, fun);
+        console.log(`register URL mapping: POST ${prefix}${_path}`);
         break;
       default:
-        console.log(`invalid URL: /api${_path}`);
+        console.log(`invalid URL: ${prefix}${_path}`);
     }
   }
 }
