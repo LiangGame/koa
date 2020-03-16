@@ -1,6 +1,7 @@
 const Joi = require('@hapi/joi');
 const jwt = require('../utils/jwt');
 const userDao = require('../dao/userDao');
+const { authExpireTime } = require('../utils/config');
 
 const login = async (ctx, next) => {
   const data = ctx.validate(ctx.request.body, {
@@ -15,7 +16,9 @@ const login = async (ctx, next) => {
         const token = jwt.generateToken(user.id);
         ctx.session.token = token;
         await userDao.updateToken(user.id, token);
-        ctx.cookies.set('userId', user.id);
+        const expireTime = Date.now() + authExpireTime * 1000;
+
+        ctx.cookies.set('userId', user.id, { maxAge: authExpireTime * 1000, expires: new Date(expireTime), signed: false });
         ctx.rest.success({ msg: '登录成功' });
       } else {
         ctx.rest.success({ msg: '密码错误' });
