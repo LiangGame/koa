@@ -1,6 +1,7 @@
 const model = require('../utils/model');
 const APIError = require('../middleware/rest').APIError;
-const Joi = require('@hapi/joi');
+const Joi = require('joi');
+const { SILENT } = require('../utils/codeStatus');
 
 const fn_index = async (ctx, next) => {
   const { name } = ctx.request.query;
@@ -10,20 +11,20 @@ const fn_index = async (ctx, next) => {
     content: name,
   });
   if (user !== null) {
-    ctx.rest.success({ data: { id: user.id } });
+    ctx.rest({ success: true, showType: SILENT, data: { msg: '请求成功' } });
   } else {
     throw new APIError('product:not_found', 'product not found by id.');
   }
 };
 
 const fn_json = async (ctx, next) => {
-  const data = ctx.validate(ctx.request.query, {
+  const data = ctx.validate(ctx.request, {
     // 账号限制长度为3-20个字符串
     name: Joi.string().min(3).max(20).required(),
   });
 
   if (!data.error) {
-    ctx.rest.success({ data: data.value });
+    ctx.rest({ success: true, showType: SILENT, data: data.value });
   }
 };
 
