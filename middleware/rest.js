@@ -1,4 +1,4 @@
-const { codeStatus, codeMsg } = require('../utils/codeStatus');
+const { codeStatus, codeMsg } = require('../common/codeStatus');
 
 module.exports = {
   APIError: function (code, message) {

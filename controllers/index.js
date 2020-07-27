@@ -1,4 +1,4 @@
-const model = require('../utils/model');
+const model = require('../models/index');
 const APIError = require('../middleware/rest').APIError;
 const Joi = require('@hapi/joi');
 

@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const uuid = require('node-uuid');
-const config = require('../dbconfig');
+const config = require('../config/config');
 
 console.log('init sequelize...');
 

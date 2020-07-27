@@ -1,7 +1,7 @@
 // scan all models defined in models:
 const fs = require('fs');
 const path = require('path');
-const db = require('./db');
+const db = require('../common/db');
 
 const files = fs.readdirSync(path.resolve(__dirname, '../models'));
 
@@ -17,6 +17,6 @@ for (const f of js_files) {
   module.exports[name] = require(path.resolve(__dirname, '../models/' + f));
 }
 
-module.exports.sync = () => {
-  db.sync();
-};
+module.exports.sync = new Promise((resolve, reject) => {
+  resolve(db.sync());
+});

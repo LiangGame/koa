@@ -3,7 +3,7 @@
 koa + sequelize + mysql 脚手架
 
 ## Step1.创建数据库配置文件
-在根目录创建 `dbconfig.js`，内容如下：
+在根目录创建 `config.js`，内容如下：
 
 ```javascript
 const config = {
