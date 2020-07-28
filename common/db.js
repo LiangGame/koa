@@ -1,3 +1,4 @@
+const moment = require('moment');
 const Sequelize = require('sequelize');
 const uuid = require('node-uuid');
 const config = require('../config/config');
@@ -21,7 +22,14 @@ const sequelize = new Sequelize(config.database, config.username, config.passwor
 const ID_TYPE = Sequelize.STRING(50);
 
 function defineModel (name, attributes) {
-  const attrs = {};
+  const attrs = {
+    id: {
+      type: ID_TYPE,
+      primaryKey: true,
+      comment: '主键',
+    },
+  };
+
   for (const key in attributes) {
     const value = attributes[key];
     if (typeof value === 'object' && value.type) {
@@ -34,21 +42,27 @@ function defineModel (name, attributes) {
       };
     }
   }
-  attrs.id = {
-    type: ID_TYPE,
-    primaryKey: true,
-  };
+
   attrs.createdAt = {
-    type: Sequelize.BIGINT,
+    type: Sequelize.DataTypes.DATE,
     allowNull: false,
+    comment: '创建时间',
+    get () {
+      return moment(this.getDataValue('createdAt')).format('YYYY-MM-DD HH:mm:ss');
+    },
   };
   attrs.updatedAt = {
-    type: Sequelize.BIGINT,
+    type: Sequelize.DataTypes.DATE,
     allowNull: false,
+    comment: '更新时间',
+    get () {
+      return moment(this.getDataValue('updatedAt')).format('YYYY-MM-DD HH:mm:ss');
+    },
   };
   attrs.version = {
     type: Sequelize.BIGINT,
     allowNull: false,
+    comment: '版本',
   };
   console.log('model defined for table: ' + name + '\n' + JSON.stringify(attrs, function (k, v) {
     if (k === 'type') {
@@ -56,7 +70,7 @@ function defineModel (name, attributes) {
         if (key === 'ABSTRACT' || key === 'NUMBER') {
           continue;
         }
-        const dbType = Sequelize[key];
+        const dbType = Sequelize.DataTypes[key];
         if (typeof dbType === 'function') {
           if (v instanceof dbType) {
             if (v._length) {
