@@ -7,6 +7,7 @@ const bodyparser = require('koa-bodyparser');
 const logger = require('koa-logger');
 const rest = require('./middleware/rest');
 const controller = require('./middleware/controller');
+const auth = require('./middleware/auth');
 
 // error handler
 onerror(app);
@@ -32,6 +33,7 @@ app.use(async (ctx, next) => {
 });
 // bind .rest() for ctx:
 app.use(rest.restify());
+app.use(auth());
 // controllers
 app.use(controller());
 

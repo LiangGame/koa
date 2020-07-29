@@ -8,6 +8,7 @@ module.exports = db.defineModel('user', {
   },
   phoneNumber: {
     type: sequelize.STRING(11),
+    unique: true, // 唯一约束
     comment: '手机号',
   },
   password: {

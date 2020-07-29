@@ -3,21 +3,21 @@ const fs = require('fs');
 const path = require('path');
 
 function addMapping (router, mapping) {
-  router.prefix('/api');
-  for (const i in mapping) {
-    const { method, path: _path, fun } = mapping[i];
-
-    switch (method) {
-      case 'GET':
-        router.get(_path, fun);
-        console.log(`register URL mapping: GET /api${_path}`);
-        break;
-      case 'POST':
-        router.post(_path, fun);
-        console.log(`register URL mapping: POST /api${_path}`);
-        break;
-      default:
-        console.log(`invalid URL: /api${_path}`);
+  // router.prefix('/api');
+  for (const url in mapping) {
+    if (url.startsWith('GET ')) {
+      // 如果url类似"GET xxx":
+      const path = url.substring(4);
+      router.get(path, mapping[url]);
+      console.log(`register URL mapping: GET ${path}`);
+    } else if (url.startsWith('POST ')) {
+      // 如果url类似"POST xxx":
+      const path = url.substring(5);
+      router.post(path, mapping[url]);
+      console.log(`register URL mapping: POST ${path}`);
+    } else {
+      // 无效的URL:
+      console.log(`invalid URL: ${url}`);
     }
   }
 }

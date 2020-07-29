@@ -14,15 +14,15 @@ function validate (ctx, data, schema) {
 const fn_index = async (ctx, next) => {
   const { name } = ctx.request.query;
 
-  const Study = model.Study;
-  const user = await Study.create({
-    content: name,
-  });
-  if (user !== null) {
-    ctx.rest.success({ data: { id: user.id } });
-  } else {
-    throw new APIError('product:not_found', 'product not found by id.');
-  }
+  // const Study = model.Study;
+  // const user = await Study.create({
+  //   content: name,
+  // });
+  // if (user !== null) {
+    ctx.rest.success({ data: { id: 0 } });
+  // } else {
+  //   throw new APIError('product:not_found', 'product not found by id.');
+  // }
 };
 
 const fn_json = async (ctx, next) => {
